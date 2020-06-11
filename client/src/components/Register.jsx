@@ -1,9 +1,8 @@
 import React, {useState} from 'react'
 import { register } from '../redux/userActions'
-//import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-const Register = ({  register, isAuthenticated }) => {
+const Register = ({  register } ) => {
   
     const [formData, setFormData] = useState({
         name: '',
@@ -20,14 +19,11 @@ const Register = ({  register, isAuthenticated }) => {
         e.preventDefault()
         register(formData)
     }
-   // if(isAuthenticated) {
-    //  return  <Redirect to ='/'/>
-   // }
+
     return (
        <div> 
        <form onSubmit={e=>onSubmit(e)}>
      <input 
-      className='custom-input'
       type = "text"
       name="name"
       placeholder = "name "
@@ -37,7 +33,6 @@ const Register = ({  register, isAuthenticated }) => {
       />
 
 <input 
-      className='custom-input'
       type = "text"
       name="famiy_name"
       placeholder = "famiy_name "
@@ -63,8 +58,5 @@ const Register = ({  register, isAuthenticated }) => {
   </div>
     )
 }
-const mapStateToProps = ( state) => ({
-    isAuthenticated: state.auth.isAuthenticated,
-    
-})
-export default connect(mapStateToProps, { register })(Register)
+
+export default connect(null, { register })(Register)

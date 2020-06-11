@@ -1,5 +1,8 @@
 import axios from 'axios'
 
+
+
+
 //Register New User 
 export const register =(formData) => async dispatch => {
     const res = await axios.post('/users/register', formData);
@@ -28,3 +31,9 @@ export const login = (formData) => async dispatch => {
     }
 
 }
+
+// Logout / Clear Profile
+export const logout = () => dispatch => {
+    dispatch({ type: 'LOGOUT' });
+    dispatch({ type: 'CLEAR_PROFILE' });
+  };

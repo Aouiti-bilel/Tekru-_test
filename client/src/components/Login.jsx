@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { login } from '../redux/userActions'
 import { connect } from 'react-redux'
 
-const Login = ({  login, isAuthenticated }) => {
+const Login = ({  login }) => {
   
     const [formData, setFormData] = useState({
         name: '',
@@ -18,9 +18,6 @@ const Login = ({  login, isAuthenticated }) => {
         e.preventDefault()
         login(formData)
     }
-       // if(isAuthenticated) {
-       //  return  <Redirect to ='/'/>
-       // }
     return (
        <div> 
        <form onSubmit={e=>onSubmit(e)}>
@@ -49,8 +46,4 @@ const Login = ({  login, isAuthenticated }) => {
   </div>
     )
 }
-const mapStateToProps = ( state) => ({
-    isAuthenticated: state.auth.isAuthenticated,
-    
-})
-export default connect(mapStateToProps, { login })(Login)
+export default connect(null, { login })(Login)

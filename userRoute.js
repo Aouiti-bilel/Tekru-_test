@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 const User = require('./UserModel');
 const auth = require('./auth')
 
-    //@route      POST /add
-    //@desc       Create new user
-    //@access     Public
+//@route      POST /add
+//@desc       Create new user
+//@access     Public
 
     router.post('/register', async(req, res)=> {
         //console.log(req.body)
@@ -25,9 +25,10 @@ const auth = require('./auth')
                 password = await bcrypt.hash(pass, salt)
 
                 let newUser = await User.create({name, famiy_name, password  })
-                
+               
                 const payload = {
                     user: {
+                        id: newUser.dataValues.id,
                         name: newUser.dataValues.name,
                         famiy_name: newUser.dataValues.famiy_name
                     }
@@ -47,14 +48,13 @@ const auth = require('./auth')
             }
     });
 
-    //@route      POST /login
-    //@desc       Login user
-    //@access     Public
+//@route      POST /login
+//@desc       Login user
+//@access     Public
     router.post('/login', async(req, res)=>{
         const { name,famiy_name, pass } = req.body   
         try {
             let user = await User.findOne({ where: {name: name} })
-            console.log(pass +' !!!!!!!!!!!!!'+user.dataValues.password)
             if(!user){
                 return res.status(400).json({msg: 'Invalid Name'});
             } 
@@ -85,16 +85,35 @@ const auth = require('./auth')
         }
     });
 
+//@route     GET /current
+//@desc      Return Current User
+//@acces     Private
+
+router.get('/current', auth, async(req, res)=>{
+    const userID =  req.user.id
+    let user = await User.findAll({ where: {id: userID} })
+    try {
+        if(!user){
+            return  res.status(404).json({msg: 'what are You Doing this is very  Danger :o  :p'})
+        }
+        res.status(200).json(user);
+             
+         
+    } catch (error) {
+        res.status(500).send('Server Error !!!')
+    }   
+    });
+
                                          //   *********************          CRUD OPERATIONS         ***************************************
 
-    //@route      GET /all
-    //@desc       Get ALl users
-    //@access     Private
+//@route      GET /all
+//@desc       Get ALl users
+//@access     Private
 
     router.get('/all',auth,  async(req, res)=>{
         let users = await User.findAll()
         try {
-           if(!users){
+           if(users.length){
             return   res.status(400).json({ msg: 'There Is No User'})
            } 
            res.status(200).json(users)
@@ -103,14 +122,9 @@ const auth = require('./auth')
             res.status(500).send('Internal Server Error ')
         }
     })
-
-
-
-    //@route      GET /user/:id
-    //@desc       Get  user By ID
-    //@access     Private
-
-    
+//@route      GET /user/:id
+//@desc       Get  user By ID
+//@access     Private
     router.get('/user/:id',auth,  async(req, res)=>{
         const userID =  req.params.id
         let user = await User.findAll({ where: {id: userID} })
@@ -126,11 +140,9 @@ const auth = require('./auth')
     })
 
     
-    //@route      GET /user/:id
-    //@desc       Get  user By ID
-    //@access     Private
-
-    
+//@route      GET /user/:id
+//@desc       Get  user By ID
+//@access     Private
     router.get('/user/:id',auth,  async(req, res)=>{
         const userID =  req.params.id
         let user = await User.findAll({ where: {id: userID} })
@@ -145,11 +157,9 @@ const auth = require('./auth')
         }
     })
 
-    //@route      PUT /user/:id
-    //@desc       Update  user By ID
-    //@access     Private
-
-    
+//@route      PUT /user/:id
+//@desc       Update  user By ID
+//@access     Private   
     router.put('/user/:id',auth,  async(req, res)=>{
         const userID =  req.params.id
         const { name,famiy_name } = req.body   
@@ -172,11 +182,9 @@ const auth = require('./auth')
             res.status(500).send('Internal Server Error ')
         }
     })
-    //@route      DELETE /user/:id
-    //@desc       Delete  user By ID
-    //@access     Private
-
-    
+//@route      DELETE /user/:id
+//@desc       Delete  user By ID
+//@access     Private      
     router.delete('/user/:id',auth,  async(req, res)=>{
         const userID =  req.params.id
         let rowDeleted  = await User.destroy({ where: {id: userID} })
@@ -186,7 +194,7 @@ const auth = require('./auth')
             return   res.status(400).json({ msg: 'We Can not  Delete This User'})
            } 
 
-           res.status(200).json({ùsg: 'User Deleted successfully'})
+           res.status(200).json({msg: 'User Deleted successfully'})
         } catch (err) {
             console.log(err.message)
             res.status(500).send('Internal Server Error ')
