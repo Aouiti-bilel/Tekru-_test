@@ -30,8 +30,8 @@ export const login = (formData) => async dispatch => {
 
 }
 
-// Logout / Clear Profile
-export const logout = () => dispatch => {
+// Logout 
+  export const logout = () => dispatch => {
     dispatch({ type: 'LOGOUT' });
   };
 
@@ -51,3 +51,28 @@ export const loadUser = () => async dispatch => {
         console.log(err.msg)
     }
 }
+export const getUsers = () => async dispatch => {
+  
+     const res = await axios.get('/users/all')
+    try {
+        dispatch({
+            type: "GET_USERS",
+            payload: res.data
+        });
+    } catch (error) {
+        
+    }
+}
+// Get Product
+export const deleteUser = id => async dispatch => {
+    console.log(id)
+    try {
+        const res = await axios.delete(`/users/user/${id}`);
+        dispatch({
+            type: "DELETE_USER",
+            payload: id
+        });
+    } catch (err) {
+        console.log(err)
+    }
+};

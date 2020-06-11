@@ -2,7 +2,8 @@ const initState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,
     loading: true,
-    user: null
+    user: null,
+    users:  []
 }
 
 export default function(state=initState, action){
@@ -35,6 +36,16 @@ export default function(state=initState, action){
         user: null,
         loading: false
       };
+      case "GET_USERS":
+          return{
+              ...state,
+              users: payload
+          }
+       case "DELETE_USER" : 
+           return {
+           ...state,
+           users: state.users.filter(user => user.id !== payload)
+       }  
         default:
              return state
     }

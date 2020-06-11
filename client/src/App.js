@@ -5,7 +5,12 @@ import store from './redux/store'
 import Home from './pages/Home'
 import Auth from './pages/Auth'
 import { loadUser } from './redux/userActions'
+import setAuthToken from './utils/setAuthToken';
+if(localStorage.token){
+  setAuthToken(localStorage.token)
+}
 function App() {
+ 
   useEffect(()=> {
     store.dispatch(loadUser());
   },[])
