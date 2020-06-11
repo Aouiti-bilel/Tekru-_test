@@ -1,7 +1,5 @@
 import axios from 'axios'
-
-
-
+import setAuthToken from '../utils/setAuthToken'
 
 //Register New User 
 export const register =(formData) => async dispatch => {
@@ -35,5 +33,21 @@ export const login = (formData) => async dispatch => {
 // Logout / Clear Profile
 export const logout = () => dispatch => {
     dispatch({ type: 'LOGOUT' });
-    dispatch({ type: 'CLEAR_PROFILE' });
   };
+
+  // Load User (Get Current User)
+export const loadUser = () => async dispatch => {
+    if(localStorage.token){
+        setAuthToken(localStorage.token);
+    }
+    try {
+        const res = await axios.get('/users/current');
+        
+        dispatch({
+            type: "CURRENT_USER",
+            payload: res.data
+        });
+    } catch (err) {
+        console.log(err.msg)
+    }
+}
