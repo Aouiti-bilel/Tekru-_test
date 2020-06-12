@@ -14,16 +14,23 @@ export default function(state=initState, action){
             ...state,
             isAuthenticated: true,
             loading: false,
-            user: payload
+            user: payload.user
         }
+        case  "REGISTER_SUCCESS":
+            return {
+                ...state,
+                ...payload,
+                loading: false,
+                users: [...state.users, payload]
+            }
         case "LOGIN_SUCCESS" :
-        case "REGISTER_SUCCESS":
            localStorage.setItem('token', payload.token)   
         return {
                 ...state,
                 ...payload,
                 isAuthenticated: true,
                 loading: false,
+              
         }   
              case 'LOGIN_FAIL':
              case 'REGISTER_FAIL':         
@@ -44,8 +51,14 @@ export default function(state=initState, action){
        case "DELETE_USER" : 
            return {
            ...state,
-           users: state.users.filter(user => user.id !== payload)
-       }  
+           users: state.users.filter(user => user.id !== payload),
+          
+       }
+       case "UPDATE_USER" : 
+       return {
+       ...state,
+       users: state.users.map(user => (payload.id === user.id ? payload : user))
+   }
         default:
              return state
     }

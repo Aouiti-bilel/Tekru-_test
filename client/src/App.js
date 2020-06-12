@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Auth from './pages/Auth'
 import { loadUser } from './redux/userActions'
 import setAuthToken from './utils/setAuthToken';
+import NavBar from './components/NavBar';
 if(localStorage.token){
   setAuthToken(localStorage.token)
 }
@@ -19,6 +20,7 @@ function App() {
 
          <Router>
             <Fragment>
+               <NavBar/>
               <Switch>
                 <Route exact path='/' component = {Home}/>
                 <Route exact path='/auth' component = {Auth}/>

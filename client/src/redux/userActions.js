@@ -63,14 +63,28 @@ export const getUsers = () => async dispatch => {
         
     }
 }
-// Get Product
+// Delete User
 export const deleteUser = id => async dispatch => {
-    console.log(id)
     try {
         const res = await axios.delete(`/users/user/${id}`);
         dispatch({
             type: "DELETE_USER",
             payload: id
+        });
+    } catch (err) {
+        console.log(err)
+    }
+};
+// Update User
+
+export const updateUser = (formData,id) => async dispatch => {
+    console.log(id)
+    try {
+        
+        const res = await axios.put(`/users/user/${id}`, formData);
+        dispatch({
+            type: "UPDATE_USER",
+            payload: res.data
         });
     } catch (err) {
         console.log(err)

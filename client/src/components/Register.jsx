@@ -32,7 +32,7 @@ const Register = ({  register } ) => {
       required
       />
 
-<input 
+      <input 
       type = "text"
       name="famiy_name"
       placeholder = "famiy_name "
