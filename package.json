@@ -4,12 +4,15 @@
   "description": "small test app for Tekru using nodejs(express, jwt, sequilize ==>back-end part)",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon server"
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "bilel",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "concurrently": "^5.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.5.0",
     "jsonwebtoken": "^8.5.1",

@@ -107,7 +107,7 @@ router.get('/current', auth, async(req, res)=>{
 //@desc       Get ALl users
 //@access     Private
 
-    router.get('/all',  async(req, res)=>{
+    router.get('/all',async(req, res)=>{
         let users = await User.findAll()
         try {
            if(users.length ==0){
