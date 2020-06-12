@@ -29,10 +29,9 @@ export default function(state=initState, action){
                 ...state,
                 isAuthenticated: true,
                 loading: false,
-              
+                user: payload.user
         }   
-             case 'LOGIN_FAIL':
-             case 'REGISTER_FAIL':         
+             case 'LOGIN_FAIL':        
              case 'LOGOUT':
            localStorage.removeItem('token');
       return {

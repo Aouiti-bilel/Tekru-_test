@@ -29,7 +29,7 @@ export const login = (formData) => async dispatch => {
    
     try {
         const res = await axios.post('/users/login',formData);
-        dispatch(loadUser());
+       
         dispatch({
           type : "LOGIN_SUCCESS",
           payload: res.data

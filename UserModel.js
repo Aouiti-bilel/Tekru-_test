@@ -8,13 +8,18 @@ const User = sequelize.define('user', {
         autoIncrement: true,
         alloNull: false,
         primaryKey: true
+        
     },
-    name: Sequelize.STRING,
+    name:{
+        type:Sequelize.STRING,
+        unique: true
+    } ,
     famiy_name: Sequelize.STRING,
     password: {
         type: Sequelize.STRING,
         alloNull: false,
     },
+    last_login: Sequelize.DATE
    
 });
 module.exports = User

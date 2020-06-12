@@ -1,5 +1,6 @@
 const express = require('express');
-
+const { validName, validfamiy_name, validPassword } = require('./validation')
+const { validationResult } = require('express-validator')
 const router = express.Router()
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -10,38 +11,22 @@ const auth = require('./auth')
 //@desc       Create new user
 //@access     Public
 
-    router.post('/register', async(req, res)=> {
-        //console.log(req.body)
-        //name must Be Unique
+    router.post('/register',[validName, validPassword,validfamiy_name], async(req, res)=> {
+        const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            return  res.status(400).json({errors: errors.array() })
+        }
         const { name,famiy_name, pass } = req.body   
             try {
-                let user = await User.findOne({ where: {name: name} })
-                
+                let user = await User.findOne({ where: {name: name} })        
                 if(user){
                     return res.status(400).json({ msg: 'User Already Exists'});
                 }
-
                 const salt = await bcrypt.genSalt(10) 
                 password = await bcrypt.hash(pass, salt)
-
-                let newUser = await User.create({name, famiy_name, password  })
-               
-                const payload = {
-                    user: {
-                        id: newUser.dataValues.id,
-                        name: newUser.dataValues.name,
-                        famiy_name: newUser.dataValues.famiy_name
-                    }
-                };     
-                jwt.sign(
-                    payload,
-                    'thistextmustbeveryverysecret',
-                    { expiresIn: 360000},
-                    (err, token) =>{
-                        if(err)throw err
-                        res.json({ token })
-                    }
-                    );
+                const last_login = Date.now()
+                let newUser = await User.create({name, famiy_name, password, last_login  })
+                return res.status(200).json(newUser)
             } catch (err) {
                 console.log(err.message);
                 res.status(500).send('Server Error')
@@ -51,7 +36,11 @@ const auth = require('./auth')
 //@route      POST /login
 //@desc       Login user
 //@access     Public
-    router.post('/login', async(req, res)=>{
+    router.post('/login',[validName, validPassword], async(req, res)=>{
+        const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            return  res.status(400).json({errors: errors.array() })
+        }
         const { name,famiy_name, pass } = req.body   
         try {
             let user = await User.findOne({ where: {name: name} })
@@ -62,7 +51,14 @@ const auth = require('./auth')
             if(!isMatch){
                 return  res.status(400).json({ msg : 'Invalid password'})
             }
-            
+           
+                await User.update(
+                {
+                    last_login:  Date.now()
+                 },
+                 { where: {id: user.id} }
+                 
+                 )
             const payload = {
                 user: {
                     id: user.dataValues.id,
@@ -70,15 +66,16 @@ const auth = require('./auth')
                     famiy_name: user.dataValues.famiy_name,
                 }
             }
-            jwt.sign(
+        jwt.sign(
                 payload,
                 'thistextmustbeveryverysecret',
                 {expiresIn: 360000},
                 (err, token) => {
                     if(err) throw err;
-                    res.json({ token })
+                    return res.status(200).json({ token, user: [payload.user]})
                 }
                 )
+                
     } catch (err) {
             console.log(err.message)
             res.status(500).send('Internal Server Error ')
@@ -110,10 +107,10 @@ router.get('/current', auth, async(req, res)=>{
 //@desc       Get ALl users
 //@access     Private
 
-    router.get('/all',auth,  async(req, res)=>{
+    router.get('/all',  async(req, res)=>{
         let users = await User.findAll()
         try {
-           if(users.length){
+           if(users.length ==0){
             return   res.status(400).json({ msg: 'There Is No User'})
            } 
            res.status(200).json(users)
@@ -160,18 +157,28 @@ router.get('/current', auth, async(req, res)=>{
 //@route      PUT /user/:id
 //@desc       Update  user By ID
 //@access     Private   
-    router.put('/user/:id',auth,  async(req, res)=>{
+    router.put('/user/:id',auth,[validName,validfamiy_name],  async(req, res)=>{
+        const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            return  res.status(400).json({errors: errors.array() })
+        }
         const userID =  req.params.id
         const { name,famiy_name } = req.body   
-        let updatedUser = await User.update(
-         {
-            name: name,
-            famiy_name: famiy_name,
-          },
-          { where: {id: userID} }
-          
-          )
+        let verifyName = await User.findOne({ where: {name: name} })
+
         try {
+
+           if(verifyName){
+            return   res.status(400).json({ msg: 'This Name Already Exist' })
+           }
+           let updatedUser = await User.update(
+            {
+               name: name,
+               famiy_name: famiy_name,
+             },
+             { where: {id: userID} }
+             
+             )
            if(!updatedUser[0]){
             return   res.status(400).json({ msg: `we can not update ${name} information` })
            } 
