@@ -1,6 +1,9 @@
 import React, { useState} from 'react'
 import { connect } from 'react-redux'
 import { register } from '../redux/userActions'
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Alert from './Alert'
  const CreateUser = ({ register}) => {
   
     const [formData, setFormData] = useState({
@@ -26,29 +29,34 @@ import { register } from '../redux/userActions'
     return (
         <div> 
        <form onSubmit={e=>onSubmit(e)}>
-       <input 
+       <Alert/>
+       <TextField 
        type = "text"
        name="name"
        placeholder = "name "
        value = {name}
        onChange = {e => onChange(e)}
+       style ={{marginLeft: '10px'}}
        />
  
-       <input 
+       <TextField 
        type = "text"
        name="famiy_name"
        placeholder = "famiy_name "
        value = {famiy_name}
        onChange = {e => onChange(e)}
+       style ={{marginLeft: '10px'}}
        />
-       <input 
+       <TextField 
        type = "password"
        name="pass"
        placeholder = "pass "
        value = {pass}
        onChange = {e => onChange(e)}
+       style ={{marginLeft: '10px'}}
        />
-       <button>create</button>
+      <Button variant="contained" color="primary" style= {{ marginLeft: '20px'}}  type="submit">ADD</Button>
+     
        </form> 
        </div>
     )

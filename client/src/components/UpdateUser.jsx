@@ -1,6 +1,9 @@
 import React, { useState} from 'react'
 import { connect } from 'react-redux'
 import { updateUser } from '../redux/userActions'
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
  const CreateUser = ({  updateUser, userData= { id: ''} }) => {
     const [hideForm, setHideForm] = useState(false)
     const [formData, setFormData] = useState({
@@ -26,9 +29,9 @@ import { updateUser } from '../redux/userActions'
     
     return (
         <div> 
-       {!hideForm ? <button onClick={()=>setHideForm(!hideForm)}>Edit</button>: 
+       {!hideForm ? <Button variant="contained" color="primary"  onClick={()=>setHideForm(!hideForm)}>Edit</Button>: 
        <form onSubmit={e=>onSubmit(e)}>
-       <input 
+       <TextField 
        type = "text"
        name="name"
        placeholder = {userData.name}
@@ -36,14 +39,15 @@ import { updateUser } from '../redux/userActions'
        onChange = {e => onChange(e)}
        />
  
-       <input 
+       <TextField 
        type = "text"
        name="famiy_name"
-       placeholder = "famiy_name "
+       placeholder = {userData.famiy_name}
        value = {famiy_name}
        onChange = {e => onChange(e)}
        />
         <button>update</button>
+      
         <button onClick={()=>setHideForm(!hideForm)}>close</button>
        </form>
       }

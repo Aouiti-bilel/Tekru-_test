@@ -14,7 +14,7 @@ export default function(state=initState, action){
             ...state,
             isAuthenticated: true,
             loading: false,
-            user: payload.user
+            user: payload
         }
         case  "REGISTER_SUCCESS":
             return {
@@ -27,7 +27,6 @@ export default function(state=initState, action){
            localStorage.setItem('token', payload.token)   
         return {
                 ...state,
-                ...payload,
                 isAuthenticated: true,
                 loading: false,
               

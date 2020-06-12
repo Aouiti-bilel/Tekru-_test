@@ -3,10 +3,12 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import store from './redux/store'
 import Home from './pages/Home'
-import Auth from './pages/Auth'
+
 import { loadUser } from './redux/userActions'
 import setAuthToken from './utils/setAuthToken';
 import NavBar from './components/NavBar';
+import Login from './components/Login';
+import Register from './components/Register';
 if(localStorage.token){
   setAuthToken(localStorage.token)
 }
@@ -14,7 +16,7 @@ function App() {
  
   useEffect(()=> {
     store.dispatch(loadUser());
-  },[])
+  }, [])
   return (
     <Provider store={store}> 
 
@@ -23,7 +25,8 @@ function App() {
                <NavBar/>
               <Switch>
                 <Route exact path='/' component = {Home}/>
-                <Route exact path='/auth' component = {Auth}/>
+                <Route exact path='/register' component = {Register}/>
+                <Route exact path='/login' component = {Login}/>
               </Switch>
             </Fragment>
          </Router>

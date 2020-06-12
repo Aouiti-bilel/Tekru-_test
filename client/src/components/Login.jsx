@@ -1,8 +1,12 @@
 import React, {useState} from 'react'
 import { login } from '../redux/userActions'
 import { connect } from 'react-redux'
-
-const Login = ({  login }) => {
+import { Link } from 'react-router-dom'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { Redirect } from 'react-router-dom'
+import Alert from './Alert';
+const Login = ({  login, isAuthenticated }) => {
   
     const [formData, setFormData] = useState({
         name: '',
@@ -18,11 +22,16 @@ const Login = ({  login }) => {
         e.preventDefault()
         login(formData)
     }
+    if(isAuthenticated) {
+        return  <Redirect to ='/'/>
+       }
     return (
-       <div> 
-       <form onSubmit={e=>onSubmit(e)}>
-     <input 
-      className='custom-input'
+       <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row'}}> 
+       
+       <form onSubmit={e=>onSubmit(e)} style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop:'50px'}}>
+       <Alert/>
+       <TextField 
+      style = {{ margin: '10px' }}
       type = "text"
       name="name"
       placeholder = "name "
@@ -30,20 +39,22 @@ const Login = ({  login }) => {
       onChange = {e => onChange(e)}
       required
       />
-      <input 
-      className='custom-pass-input'
-      type = "password"
+      <TextField 
       name = "pass"
       placeholder = "pass"
       value = {pass}
       onChange = {e => onChange(e)}
       required
       />          
-      <input style= {{ marginTop: '10px'}} className='login-btn' type="submit" value= "login"/>
-      
+      <Button variant="contained" color="primary" style= {{ marginTop: '10px'}}  type="submit">Login</Button>
+      <h6>If You Dont Have An account,  </h6>
+      <Link to='/register'> Signup</Link>
       </form>
-    
+      
   </div>
     )
 }
-export default connect(null, { login })(Login)
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+ })
+export default connect(mapStateToProps, { login })(Login)

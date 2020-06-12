@@ -1,8 +1,11 @@
 import React, {useState} from 'react'
 import { register } from '../redux/userActions'
 import { connect } from 'react-redux'
-
-const Register = ({  register } ) => {
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { Redirect, withRouter, Link } from 'react-router-dom'
+import Alert from './Alert';
+const Register = ({  register, isAuthenticated, history } ) => {
   
     const [formData, setFormData] = useState({
         name: '',
@@ -15,15 +18,20 @@ const Register = ({  register } ) => {
         setFormData({...formData, [e.target.name]: e.target.value})
     }
 
-    const onSubmit = e =>{
+    const onSubmit =async e =>{
         e.preventDefault()
-        register(formData)
+        register(formData, history)
+     
     }
-
+    if(isAuthenticated) {
+        return  <Redirect to ='/'/>
+       }
     return (
-       <div> 
-       <form onSubmit={e=>onSubmit(e)}>
-     <input 
+        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row'}}> 
+        <form onSubmit={e=>onSubmit(e)} style={{ display: 'flex', alignItems: 'center', flexDirection: 'column', marginTop:'50px'}}>
+            <Alert/>
+     <TextField 
+      style = {{ margin: '10px' }}
       type = "text"
       name="name"
       placeholder = "name "
@@ -32,7 +40,8 @@ const Register = ({  register } ) => {
       required
       />
 
-      <input 
+      <TextField 
+       style = {{ margin: '10px' }}
       type = "text"
       name="famiy_name"
       placeholder = "famiy_name "
@@ -40,8 +49,8 @@ const Register = ({  register } ) => {
       onChange = {e => onChange(e)}
       required
       />
-      <input 
-      className='custom-pass-input'
+      <TextField 
+       style = {{ margin: '10px' }}
       type = "password"
       name = "pass"
       placeholder = "pass"
@@ -51,12 +60,15 @@ const Register = ({  register } ) => {
       />
 
                  
-      <input style= {{ marginTop: '10px'}} className='login-btn' type="submit" value= "Register"/>
-      
+<Button variant="contained" color="primary" style= {{ marginTop: '10px'}}  type="submit">Register</Button>
+<h6>Already Have Account</h6>
+      <Link to='/login'> LogIn</Link>
       </form>
     
   </div>
     )
 }
-
-export default connect(null, { register })(Register)
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+ })
+export default withRouter(connect(mapStateToProps, { register })(Register))

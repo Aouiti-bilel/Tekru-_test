@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from '@material-ui/core/Link';
 import { connect } from 'react-redux'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,7 +19,7 @@ function NavBar({ isAuthenticated, logout }) {
              Management
           </Typography>
           {
-              !isAuthenticated ? <Button color="inherit">Login</Button> : <Button color="inherit" onClick={()=>logout()}>Logout</Button>
+              isAuthenticated && <Button color="inherit" onClick={()=>logout()}>Logout</Button>
           }
           
         </Toolbar>
